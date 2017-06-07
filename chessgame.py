@@ -171,18 +171,18 @@ class ChessBoard:
     # It should return these moves as a list of move strings, e.g.
     # [c2c3, d4e5, f4f8]
     # TODO: write an implementation for this function
-    def legal_moves(self,move):
+    def legal_moves(self,move):   
         # we moeten toevoegen dat hij kijkt wiens zet het is
         possible_actions = []
         for x in range(8):
             for y in range(8):
                 piece = self.get_boardpiece((x,y))
-                if piece != None and piece.material == Material.King:
+                if piece != None and piece.side==self.turn and piece.material == Material.King:
                         self.koning_Check(x,y,possible_actions)
-                if piece != None and  piece.material == Material.Rook:
+                if piece != None and piece.side==self.turn and  piece.material == Material.Rook:
                         self.toren_Check(x,y,possible_actions)
-                #if piece != None and  piece.material == Material.Pawn:
-                 #       self.pion_Check(x,y,possible_actions)
+                if piece != None and piece.side==self.turn and   piece.material == Material.Pawn:
+                        self.pion_Check(x,y,possible_actions)
         return possible_actions
         
 
@@ -207,36 +207,109 @@ class ChessBoard:
 
     def toren_Check(self,x,y,possible_actions):
         start = (x,y)
-        start = to_notation(start)
+        pieceself = self.get_boardpiece((x,y))
         #Horizontal Moves
-        for t in range(8):
-            if t != x:
-                move = (x, t)
-                move = to_notation(move)
-                possible_actions.append(start + move)
+        for t in range(8-x):
+            end = (x+t, y)
+            if start != end:
+                piece = self.get_boardpiece((x+t, y))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(x+1):
+                if t < 8 :
+                    end = (x-t, y)
+                    if start != end:
+                        piece = self.get_boardpiece((x-t, y))
+                        if piece != None:
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+
         #Vertical Moves
-        for t in range(8):
-            if t != y:
-                move = (t, y)
-                move = to_notation(move)
-                possible_actions.append(start + move)
+        for t in range(8-y):
+            end = (x, y+t)
+            if start != end:
+                piece = self.get_boardpiece((x, y+t))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(y+1):
+                if t < 8 and t > 0:
+                    end = (x, y-t)
+                    piece = self.get_boardpiece((x, y-t))
+                    if start != end:
+                        if piece != None :
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+
         return possible_actions
 
     def pion_Check(self,x,y,possible_actions):
         start = (x,y)
         start = to_notation(start)
-        piece = self.get_boardpiece((x,y))
-        if piece.side == Side.White:
-            move = (x, y+1)
+        pieceself = self.get_boardpiece((x,y))
+        if pieceself.side == Side.White:
+            move = (x, y-1)
             move = to_notation(move)
             if y !=8:
                 possible_actions.append(start + move)
-                print(possible_actions)
-        if piece.side == Side.Black:
-            move = (x, y-1)
+            move = (x+1, y-1)
+            move = to_notation(move)
+            if y !=-1 and x != 8:
+                pieces = self.get_boardpiece((x+1,y-1))
+                if pieces != None :
+                    if pieces.side != pieceself.side:
+                        possible_actions.append(start + move)
+            move = (x-1, y-1)
+            move = to_notation(move)
+            if y !=-1 and x != -1:
+                pieces = self.get_boardpiece((x-1,y-1))
+                if pieces != None :
+                    if pieces.side != pieceself.side:
+                        possible_actions.append(start + move)
+                
+        if pieceself.side == Side.Black:
+            move = (x, y+1)
             move = to_notation(move)
             if y !=-1:
                 possible_actions.append(start + move)
+                
+            move = (x+1, y+1)
+            move = to_notation(move)
+            if y !=8 and x != 8:
+                pieces = self.get_boardpiece((x+1,y+1))
+                if pieces != None :
+                    if pieces.side != pieceself.side:
+                        possible_actions.append(start + move)
+            move = (x-1, y+1)
+            move = to_notation(move)
+            if y !=8 and x != -1:
+                pieces = self.get_boardpiece((x-1,y+1))
+                if pieces != None :
+                    if pieces.side != pieceself.side:
+                        possible_actions.append(start + move)    
         return possible_actions
 
     # This function should return, given the move specified (in the format
