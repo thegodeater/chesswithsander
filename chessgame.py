@@ -172,6 +172,7 @@ class ChessBoard:
     # [c2c3, d4e5, f4f8]
     # TODO: write an implementation for this function
     def legal_moves(self,move):
+        # we moeten toevoegen dat hij kijkt wiens zet het is
         possible_actions = []
         for x in range(8):
             for y in range(8):
@@ -190,12 +191,17 @@ class ChessBoard:
     def koning_Check(self,x,y,possible_actions):
         start = (x,y)
         start = to_notation(start)
+        pieceself = self.get_boardpiece((x,y))
         for t in range(-1,2):
             for z in range(-1,2):
                 move = (x+z, y+t)
-                if move !=(x,-1) and move !=(-1,y) and move !=(x,8) and move !=(8,y) and move !=(x,y):
-                    move = to_notation(move)
-                    possible_actions.append(start + move)
+                if x+z != -1 and y+t !=-1 and x+z !=8 and y+t !=8 and move !=(x,y):
+                    piece = self.get_boardpiece((x+z, y+t))
+                    if piece != None and piece.side == pieceself.side: 
+                        pass
+                    else:
+                        move = to_notation(move)
+                        possible_actions.append(start + move)
         return possible_actions
 
 
@@ -211,7 +217,7 @@ class ChessBoard:
         #Vertical Moves
         for t in range(8):
             if t != y:
-                move = (x, t)
+                move = (t, y)
                 move = to_notation(move)
                 possible_actions.append(start + move)
         return possible_actions
