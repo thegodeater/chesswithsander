@@ -180,8 +180,8 @@ class ChessBoard:
                         self.koning_Check(x,y,possible_actions)
                 if piece != None and  piece.material == Material.Rook:
                         self.toren_Check(x,y,possible_actions)
-                if piece != None and  piece.material == Material.Pawn:
-                        self.pion_Check(x,y,possible_actions)
+                #if piece != None and  piece.material == Material.Pawn:
+                 #       self.pion_Check(x,y,possible_actions)
         return possible_actions
         
 
@@ -201,23 +201,36 @@ class ChessBoard:
 
     def toren_Check(self,x,y,possible_actions):
         start = (x,y)
+        start = to_notation(start)
         #Horizontal Moves
-        #while t
-        #    end = end(x-t, y)
-        #    possible_actions.append(to_move(start,end))
-        #return possible_actions
+        for t in range(8):
+            if t != x:
+                move = (x, t)
+                move = to_notation(move)
+                possible_actions.append(start + move)
+        #Vertical Moves
+        for t in range(8):
+            if t != y:
+                move = (x, t)
+                move = to_notation(move)
+                possible_actions.append(start + move)
+        return possible_actions
 
     def pion_Check(self,x,y,possible_actions):
         start = (x,y)
         start = to_notation(start)
-        if piece.side == White:
+        piece = self.get_boardpiece((x,y))
+        if piece.side == Side.White:
             move = (x, y+1)
             move = to_notation(move)
-            possible_actions.append(start + move)
-        if piece.side == Black:
+            if y !=8:
+                possible_actions.append(start + move)
+                print(possible_actions)
+        if piece.side == Side.Black:
             move = (x, y-1)
             move = to_notation(move)
-            possible_actions.append(start + move)
+            if y !=-1:
+                possible_actions.append(start + move)
         return possible_actions
 
     # This function should return, given the move specified (in the format
