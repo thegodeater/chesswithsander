@@ -180,9 +180,10 @@ class ChessBoard:
                         self.koning_Check(x,y,possible_actions)
                 if piece != None and  piece.material == Material.Rook:
                         self.toren_Check(x,y,possible_actions)
+                if piece != None and  piece.material == Material.Pawn:
+                        self.pion_Check(x,y,possible_actions)
         return possible_actions
-        #        if piece != None and  piece.material == Material.Pawn:
-        #                possible_actions.append(self.pion_Check(x,y))
+        
 
     pass
 
