@@ -274,7 +274,9 @@ class ChessBoard:
             move = (x, y-1)
             move = to_notation(move)
             if y !=8:
-                possible_actions.append(start + move)
+                pieces = self.get_boardpiece((x,y-1))
+                if pieces == None :
+                    possible_actions.append(start + move)
             move = (x+1, y-1)
             move = to_notation(move)
             if y !=-1 and x != 8:
@@ -294,7 +296,9 @@ class ChessBoard:
             move = (x, y+1)
             move = to_notation(move)
             if y !=-1:
-                possible_actions.append(start + move)
+                pieces = self.get_boardpiece((x,y+1))
+                if pieces == None :
+                    possible_actions.append(start + move)
                 
             move = (x+1, y+1)
             move = to_notation(move)
