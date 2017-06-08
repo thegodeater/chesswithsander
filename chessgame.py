@@ -357,34 +357,37 @@ class ChessComputer:
         print(chessboard.turn)
         moves = chessboard.legal_moves()
         if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-            bestValue = ChessComputer.evaluate_board(chessboard, depth)
+            #print(ChessComputer.evaluate_board(chessboard, depth))
+            print(evaluate_board(chessboard, depth))
+            bestValue = evaluate_board(chessboard, depth)
+            print(bestValue)
             return (bestValue, None)
+        #else:
+        #    while depth > 0:
+        #        #Maximizing Player
+        #        if chessboard.turn == 0:
+        #            bestValue = -inf
+        #            #i = 0
+        #            #while i < len(moves):
+        #            new_state = chessboard.make_move(str(moves[0]))
+        #            v = ChessComputer.minimax(new_state, depth-1)
+        #            print(new_state)
+        #            print(v)
+        #            bestValue = max(bestValue, v[0])
+        #            #i = i + 1
+        #            return bestValue, "best move path"
 
-        print(chessboard.turn)
-        while depth > 0:
-            if chessboard.turn == 0:
-                bestValue = -inf
-                #i = 0
-                #while i < len(moves):
-                new_state = chessboard.make_move(str(moves[0]))
-                v = ChessComputer.minimax(new_state, depth-1)
-                print(new_state)
-                print(v)
-                bestValue = max(bestValue, v[0])
-                #i = i + 1
-                return bestValue, "best move path"
-
-            if chessboard.turn == 1:
-                bestValue = inf
-                #i = 0
-                #while i < len(moves):
-                new_state = chessboard.make_move(str(moves[0]))
-                v = ChessComputer.minimax(new_state, depth-1)
-                print(new_state)
-                print(v)
-                bestValue = min(bestValue, v[0])
-                #i = i + 1
-            return bestValue, "best move path"
+        #        if chessboard.turn == 1:
+        #            bestValue = inf
+        #            #i = 0
+        #            #while i < len(moves):
+        #            new_state = chessboard.make_move(str(moves[0]))
+        #            v = ChessComputer.minimax(new_state, depth-1)
+        #            print(new_state)
+        #            print(v)
+        #            bestValue = min(bestValue, v[0])
+        #            #i = i + 1
+        #        return bestValue, "best move path"
 
         return (score, "best move path")
 
@@ -416,27 +419,67 @@ class ChessComputer:
             for y in range(8):
                 piece = ChessBoard.get_boardpiece((x,y))
                 if piece != None and piece.side == 0 and piece.material == Material.King:
-                    boardValue = boardValue + 100
+                    possible_actions = []
+                    bonus = 0
+                    moves = ChessBoard.koning_Check(x,y,possible_actions)
+                    movesking = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesking, ChessBoard)
+                    boardValue = boardValue + 100 + 0.1 * movesking + bonus
                 if piece != None and piece.side == 1 and piece.material == Material.King:
-                    boardValue = boardValue - 100
+                    possible_actions = []
+                    bonus = 0
+                    moves = ChessBoard.koning_Check(x,y,possible_actions)
+                    movesking = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesking, ChessBoard)
+                    boardValue = boardValue - 100 - 0.1 * movesking - bonus
                 if piece != None and piece.side == 0 and piece.material == Material.Rook:
                     possible_actions = []
-                    movesrook = len(ChessBoard.toren_Check(x,y,possible_actions))
-                    boardValue = boardValue + (5 +movesrook/14)
+                    bonus = 0
+                    moves = ChessBoard.toren_Check(x,y,possible_actions)
+                    movesrook = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
+                    boardValue = boardValue + 5 + 0.1 * movesrook + bonus
                 if piece != None and piece.side == 1 and piece.material == Material.Rook:
                     possible_actions = []
-                    movesrook = len(ChessBoard.toren_Check(x,y,possible_actions))
-                    boardValue = boardValue - 5 -movesrook/14
+                    bonus = 0
+                    moves = ChessBoard.toren_Check(x,y,possible_actions)
+                    movesrook = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
+                    boardValue = boardValue - 5 - 0.1 * movesrook - bonus
                 if piece != None and piece.side == 0 and piece.material == Material.Pawn:
                     possible_actions = []
-                    movespawn = len(ChessBoard.pion_Check(x,y,possible_actions))
-                    print (ChessBoard.pion_Check(x,y,possible_actions))
-                    boardValue = boardValue + (0.5+ movespawn/2)
+                    bonus = 0
+                    moves = ChessBoard.pion_Check(x,y,possible_actions)
+                    movespawn = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movespawn, ChessBoard)
+                    boardValue = boardValue + 1 + 0.1 * movespawn + bonus
                 if piece != None and piece.side == 1 and piece.material == Material.Pawn:
                     possible_actions = []
-                    movespawn = len(ChessBoard.pion_Check(x,y,possible_actions))
-                    boardValue = boardValue - 0.5- movespawn/2
+                    bonus = 0
+                    moves = ChessBoard.pion_Check(x,y,possible_actions)
+                    movespawn = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movespawn, ChessBoard)
+                    boardValue = boardValue - 1 - 0.1 * movespawn - bonus
         return boardValue
+
+    def checkBonus(alle_Moves, aantal, ChessBoard):
+        bonus = 0
+        for i in range(aantal):
+            enkele_Zet = alle_Moves[i]
+            end_pos = to_coordinate(enkele_Zet[2:4])
+            endX= end_pos[0]
+            endY= end_pos[1]
+            possibleEnemy = ChessBoard.get_boardpiece((endX,endY))
+            if possibleEnemy != None and possibleEnemy.material == Material.King:
+                bonus = bonus + 40
+            if possibleEnemy != None and possibleEnemy.material == Material.Rook:
+                bonus = bonus + 8
+            if possibleEnemy != None and possibleEnemy.material == Material.Pawn:
+                bonus = bonus + 2
+        print(bonus)
+        print("functie")
+        return bonus
+
 
 # This class is responsible for starting the chess game, playing and user
 # feedback
