@@ -170,7 +170,7 @@ class ChessBoard:
     # It should return these moves as a list of move strings, e.g.
     # [c2c3, d4e5, f4f8]
     # TODO: write an implementation for this function
-    def legal_moves(self,move):
+    def legal_moves(self):
         # we moeten toevoegen dat hij kijkt wiens zet het is
         possible_actions = []
         for x in range(8):
@@ -320,8 +320,7 @@ class ChessBoard:
     # TODO: write an implementation for this function, implement it in terms
     # of legal_moves()
     def is_legal_move(self, move):
-        moves = self.legal_moves(move)
-        print(moves)
+        moves = self.legal_moves()
         if move in moves:
             return True
         else: return False
@@ -353,7 +352,18 @@ class ChessComputer:
     # TODO: write an implementation for this function
     @staticmethod
     def minimax(chessboard, depth):
-        return (0, "no implementation written")
+        score = 0;
+        legal_moves = legal_moves(chessboard)
+        print(legal_moves)
+        return (score, "best move path")
+
+#    def maxValue(chessboard):
+#        bestValue = inf
+#        return bestValue
+
+#    def minValue(chessboard):
+#        bestValue = -inf
+#        return bestValue
 
     # This function uses alphabeta to calculate the next move. Given the
     # chessboard and max depth, this function should return a tuple of the
@@ -395,7 +405,7 @@ class ChessGame:
 
         # NOTE: you can make this depth higher once you have implemented
         # alpha-beta, which is more efficient
-        self.depth = 4
+        self.depth = 0
         self.chessboard = ChessBoard(turn)
 
         # If a file was specified as commandline argument, use that filename
