@@ -424,42 +424,42 @@ class ChessComputer:
                     moves = ChessBoard.koning_Check(x,y,possible_actions)
                     movesking = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movesking, ChessBoard)
-                    boardValue = boardValue + (100 + 0.1 * movesking + bonus)
+                    boardValue = boardValue + 100 + 0.1 * movesking + bonus
                 if piece != None and piece.side == 1 and piece.material == Material.King:
                     possible_actions = []
                     bonus = 0
                     moves = ChessBoard.koning_Check(x,y,possible_actions)
                     movesking = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movesking, ChessBoard)
-                    boardValue = boardValue - (100 - 0.1 * movesking - bonus)
+                    boardValue = boardValue - 100 - 0.1 * movesking - bonus
                 if piece != None and piece.side == 0 and piece.material == Material.Rook:
                     possible_actions = []
                     bonus = 0
                     moves = ChessBoard.toren_Check(x,y,possible_actions)
                     movesrook = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
-                    boardValue = boardValue + (5 + 0.1 * movesrook + bonus)
+                    boardValue = boardValue + 5 + 0.1 * movesrook + bonus
                 if piece != None and piece.side == 1 and piece.material == Material.Rook:
                     possible_actions = []
                     bonus = 0
                     moves = ChessBoard.toren_Check(x,y,possible_actions)
                     movesrook = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
-                    boardValue = boardValue - (5 - 0.1 * movesrook - bonus)
+                    boardValue = boardValue - 5 - 0.1 * movesrook - bonus
                 if piece != None and piece.side == 0 and piece.material == Material.Pawn:
                     possible_actions = []
                     bonus = 0
                     moves = ChessBoard.pion_Check(x,y,possible_actions)
                     movespawn = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movespawn, ChessBoard)
-                    boardValue = boardValue + (1 + 0.1 * movespawn)
+                    boardValue = boardValue + 1 + 0.1 * movespawn + bonus
                 if piece != None and piece.side == 1 and piece.material == Material.Pawn:
                     possible_actions = []
                     bonus = 0
                     moves = ChessBoard.pion_Check(x,y,possible_actions)
                     movespawn = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movespawn, ChessBoard)
-                    boardValue = boardValue - (1 - 0.1 * movespawn)
+                    boardValue = boardValue - 1 - 0.1 * movespawn - bonus
         return boardValue
 
     def checkBonus(alle_Moves, aantal, ChessBoard):
