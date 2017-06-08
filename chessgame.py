@@ -353,7 +353,13 @@ class ChessComputer:
     @staticmethod
     def minimax(chessboard, depth):
         score = 0;
-        chessboard.legal_moves()
+        moves=chessboard.legal_moves()
+        i = 0
+        while i < len(moves):
+            print(moves[i])
+            new_state = chessboard.make_move(str(moves[i]))
+            print(new_state)
+            i = i+1
     #    if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
     #        return (legalmoves(chessboard), None)
 #        else:
