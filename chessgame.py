@@ -358,7 +358,7 @@ class ChessComputer:
     #        return (legalmoves(chessboard), None)
 #        else:
 #            if chessboard.turn == 0:
-#                maxValue(chessboard)
+#                maxValue(new_chessboard)
 #            if chessboard.turn == 1:
 #                minValue(chessboard)
 
