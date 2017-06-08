@@ -353,8 +353,16 @@ class ChessComputer:
     @staticmethod
     def minimax(chessboard, depth):
         score = 0;
-        legal_moves = legal_moves(chessboard)
-        print(legal_moves)
+        side = chessboard.turn
+
+        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+            print(hallo)
+        #else:
+        #    if chessboard.turn == 0:
+        #        maxValue(chessboard)
+        #    if chessboard.turn == 1:
+        #        minValue(chessboard)
+
         return (score, "best move path")
 
 #    def maxValue(chessboard):
@@ -407,18 +415,6 @@ class ChessComputer:
                     boardValue = boardValue - 0.5- movespawn/2
         return boardValue
 
-    #def movespossible(self):
-     #    possible_actions = []
-      #  for x in range(8):
-       #     for y in range(8):
-        #        piece = self.get_boardpiece((x,y))
-         #       if piece != None and piece.side==self.turn and piece.material == Material.King:
-          #              self.koning_Check(x,y,possible_actions)
-           #     if piece != None and piece.side==self.turn and  piece.material == Material.Rook:
-            #            self.toren_Check(x,y,possible_actions)
-             #   if piece != None and piece.side==self.turn and   piece.material == Material.Pawn:
-              #          self.pion_Check(x,y,possible_actions)
-       # return possible_actions
 # This class is responsible for starting the chess game, playing and user
 # feedback
 class ChessGame:
@@ -426,7 +422,7 @@ class ChessGame:
 
         # NOTE: you can make this depth higher once you have implemented
         # alpha-beta, which is more efficient
-        self.depth = 0
+        self.depth = 4
         self.chessboard = ChessBoard(turn)
 
         # If a file was specified as commandline argument, use that filename
@@ -464,7 +460,7 @@ class ChessGame:
     def make_computer_move(self):
         print("Calculating best move...")
         return ChessComputer.computer_move(self.chessboard,
-                self.depth, alphabeta=True)
+                self.depth, alphabeta=False)
 
 
     def make_human_move(self):
