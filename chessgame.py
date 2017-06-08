@@ -351,45 +351,49 @@ class ChessComputer:
     # of a specific board configuration after the max depth is reached
     # TODO: write an implementation for this function
     @staticmethod
-    def minimax(chessboard, depth):
-        score = 0
-        inf = 99999999
-        print(chessboard.turn)
-        moves = chessboard.legal_moves()
-        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-            #print(ChessComputer.evaluate_board(chessboard, depth))
-            print(evaluate_board(chessboard, depth))
-            bestValue = evaluate_board(chessboard, depth)
-            print(bestValue)
-            return (bestValue, None)
-        #else:
-        #    while depth > 0:
-        #        #Maximizing Player
-        #        if chessboard.turn == 0:
-        #            bestValue = -inf
-        #            #i = 0
-        #            #while i < len(moves):
-        #            new_state = chessboard.make_move(str(moves[0]))
-        #            v = ChessComputer.minimax(new_state, depth-1)
-        #            print(new_state)
-        #            print(v)
-        #            bestValue = max(bestValue, v[0])
-        #            #i = i + 1
-        #            return bestValue, "best move path"
+     def minimax(chessboard, depth):
 
-        #        if chessboard.turn == 1:
-        #            bestValue = inf
-        #            #i = 0
-        #            #while i < len(moves):
-        #            new_state = chessboard.make_move(str(moves[0]))
-        #            v = ChessComputer.minimax(new_state, depth-1)
-        #            print(new_state)
-        #            print(v)
-        #            bestValue = min(bestValue, v[0])
-        #            #i = i + 1
-        #        return bestValue, "best move path"
+            def minvalue(chessboard, depth):
+                if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+                    return ChessComputer.evaluate_board(chessboard, depth), None
+                bestValue = float("inf")
+                moves = chessboard.legal_moves()
+                depth=depth-1   
+                #print(chessboard.turn)
+                for move in moves:
+                    new_state = chessboard.make_move(move)
+                    #print(new_state)
+                    score,_ = maxvalue(new_state, depth)
+                   # print(score)
+                    #print(bestValue)
+                    
+                    if score < bestValue: 
+                        bestValue = score
+                        bestmove = move
+                return(bestValue,bestmove)
+            def maxvalue(chessboard, depth):
+                if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+                    
+                    return ChessComputer.evaluate_board(chessboard, depth), None
+                bestValue = -float("inf")
+                moves = chessboard.legal_moves()   
+                #print(chessboard.turn)
+                for move in moves:
+                    new_state = chessboard.make_move(move)
+                    #print(new_state)
+                    score,_ = minvalue(new_state, depth-1)
+                    #print(score)
+                    #print(bestValue)
+                    
+                    if score > bestValue: #
+                        bestValue = score
+                        bestmove = move
+                return(bestValue,bestmove)
 
-        return (score, "best move path")
+            if chessboard.turn == Side.White:
+                return maxvalue(chessboard, depth)
+            elif chessboard.turn == Side.Black:
+                return minvalue(chessboard, depth)
 
 #    def maxValue(chessboard):
 #        bestValue = inf

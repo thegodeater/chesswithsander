@@ -355,7 +355,7 @@ class ChessComputer:
 
         def minvalue(chessboard, depth):
             if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-                return ChessComputer.evaluate_board(chessboard, depth), chessboard
+                return ChessComputer.evaluate_board(chessboard, depth), None
             bestValue = float("inf")
             moves = chessboard.legal_moves()
             depth=depth-1   
@@ -373,8 +373,8 @@ class ChessComputer:
             return(bestValue,bestmove)
         def maxvalue(chessboard, depth):
             if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-                print
-                return ChessComputer.evaluate_board(chessboard, depth), chessboard
+                
+                return ChessComputer.evaluate_board(chessboard, depth), None
             bestValue = -float("inf")
             moves = chessboard.legal_moves()   
             #print(chessboard.turn)
