@@ -272,7 +272,7 @@ class ChessBoard:
         if pieceself.side == Side.White:
             move = (x, y-1)
             move = to_notation(move)
-            if y !=8:
+            if y !=-1:
                 pieces = self.get_boardpiece((x,y-1))
                 if pieces == None :
                     possible_actions.append(start + move)
@@ -375,19 +375,40 @@ class ChessComputer:
             for y in range(8):
                 piece = ChessBoard.get_boardpiece((x,y))
                 if piece != None and piece.side == 0 and piece.material == Material.King:
-                    boardValue = boardValue + 10
+                    boardValue = boardValue + 100
                 if piece != None and piece.side == 1 and piece.material == Material.King:
-                    boardValue = boardValue - 10
+                    boardValue = boardValue - 100
                 if piece != None and piece.side == 0 and piece.material == Material.Rook:
-                    boardValue = boardValue + 5
+                    possible_actions = []
+                    movesrook = len(ChessBoard.toren_Check(x,y,possible_actions))
+                    boardValue = boardValue + (5 +movesrook/14)
                 if piece != None and piece.side == 1 and piece.material == Material.Rook:
-                    boardValue = boardValue - 5
+                    possible_actions = []
+                    movesrook = len(ChessBoard.toren_Check(x,y,possible_actions))
+                    boardValue = boardValue - 5 -movesrook/14
                 if piece != None and piece.side == 0 and piece.material == Material.Pawn:
-                    boardValue = boardValue + 1
+                    possible_actions = []
+                    movespawn = len(ChessBoard.pion_Check(x,y,possible_actions))
+                    print (ChessBoard.pion_Check(x,y,possible_actions))
+                    boardValue = boardValue + (0.5+ movespawn/2)
                 if piece != None and piece.side == 1 and piece.material == Material.Pawn:
-                    boardValue = boardValue - 1
+                    possible_actions = []
+                    movespawn = len(ChessBoard.pion_Check(x,y,possible_actions))
+                    boardValue = boardValue - 0.5- movespawn/2
         return boardValue
 
+    #def movespossible(self):
+     #    possible_actions = []
+      #  for x in range(8):
+       #     for y in range(8):
+        #        piece = self.get_boardpiece((x,y))
+         #       if piece != None and piece.side==self.turn and piece.material == Material.King:
+          #              self.koning_Check(x,y,possible_actions)
+           #     if piece != None and piece.side==self.turn and  piece.material == Material.Rook:
+            #            self.toren_Check(x,y,possible_actions)
+             #   if piece != None and piece.side==self.turn and   piece.material == Material.Pawn:
+              #          self.pion_Check(x,y,possible_actions)
+       # return possible_actions
 # This class is responsible for starting the chess game, playing and user
 # feedback
 class ChessGame:
