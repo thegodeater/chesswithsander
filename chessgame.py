@@ -353,15 +353,14 @@ class ChessComputer:
     @staticmethod
     def minimax(chessboard, depth):
         score = 0;
-        side = chessboard.turn
-
-        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-            print(hallo)
-        #else:
-        #    if chessboard.turn == 0:
-        #        maxValue(chessboard)
-        #    if chessboard.turn == 1:
-        #        minValue(chessboard)
+        chessboard.legal_moves()
+    #    if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+    #        return (legalmoves(chessboard), None)
+#        else:
+#            if chessboard.turn == 0:
+#                maxValue(chessboard)
+#            if chessboard.turn == 1:
+#                minValue(chessboard)
 
         return (score, "best move path")
 
