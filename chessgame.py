@@ -352,21 +352,39 @@ class ChessComputer:
     # TODO: write an implementation for this function
     @staticmethod
     def minimax(chessboard, depth):
-        score = 0;
-        moves=chessboard.legal_moves()
-        i = 0
-        while i < len(moves):
-            print(moves[i])
-            new_state = chessboard.make_move(str(moves[i]))
-            print(new_state)
-            i = i+1
-    #    if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-    #        return (legalmoves(chessboard), None)
-#        else:
-#            if chessboard.turn == 0:
-#                maxValue(new_chessboard)
-#            if chessboard.turn == 1:
-#                minValue(chessboard)
+        score = 0
+        inf = 99999999
+        print(chessboard.turn)
+        moves = chessboard.legal_moves()
+        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+            bestValue = ChessComputer.evaluate_board(chessboard, depth)
+            return (bestValue, None)
+
+        print(chessboard.turn)
+        while depth > 0:
+            if chessboard.turn == 0:
+                bestValue = -inf
+                #i = 0
+                #while i < len(moves):
+                new_state = chessboard.make_move(str(moves[0]))
+                v = ChessComputer.minimax(new_state, depth-1)
+                print(new_state)
+                print(v)
+                bestValue = max(bestValue, v[0])
+                #i = i + 1
+                return bestValue, "best move path"
+
+            if chessboard.turn == 1:
+                bestValue = inf
+                #i = 0
+                #while i < len(moves):
+                new_state = chessboard.make_move(str(moves[0]))
+                v = ChessComputer.minimax(new_state, depth-1)
+                print(new_state)
+                print(v)
+                bestValue = min(bestValue, v[0])
+                #i = i + 1
+            return bestValue, "best move path"
 
         return (score, "best move path")
 
@@ -427,7 +445,7 @@ class ChessGame:
 
         # NOTE: you can make this depth higher once you have implemented
         # alpha-beta, which is more efficient
-        self.depth = 4
+        self.depth = 2
         self.chessboard = ChessBoard(turn)
 
         # If a file was specified as commandline argument, use that filename
