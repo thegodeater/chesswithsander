@@ -1,7 +1,6 @@
 #lol
 from __future__ import print_function
 from copy import deepcopy
-from pprint import pprint
 import sys
 
 ## Helper functions
@@ -171,7 +170,7 @@ class ChessBoard:
     # It should return these moves as a list of move strings, e.g.
     # [c2c3, d4e5, f4f8]
     # TODO: write an implementation for this function
-    def legal_moves(self,move):   
+    def legal_moves(self,move):
         # we moeten toevoegen dat hij kijkt wiens zet het is
         possible_actions = []
         for x in range(8):
@@ -184,7 +183,7 @@ class ChessBoard:
                 if piece != None and piece.side==self.turn and   piece.material == Material.Pawn:
                         self.pion_Check(x,y,possible_actions)
         return possible_actions
-        
+
 
     pass
 
@@ -197,7 +196,7 @@ class ChessBoard:
                 move = (x+z, y+t)
                 if x+z != -1 and y+t !=-1 and x+z !=8 and y+t !=8 and move !=(x,y):
                     piece = self.get_boardpiece((x+z, y+t))
-                    if piece != None and piece.side == pieceself.side: 
+                    if piece != None and piece.side == pieceself.side:
                         pass
                     else:
                         move = to_notation(move)
@@ -291,7 +290,7 @@ class ChessBoard:
                 if pieces != None :
                     if pieces.side != pieceself.side:
                         possible_actions.append(start + move)
-                
+
         if pieceself.side == Side.Black:
             move = (x, y+1)
             move = to_notation(move)
@@ -299,7 +298,7 @@ class ChessBoard:
                 pieces = self.get_boardpiece((x,y+1))
                 if pieces == None :
                     possible_actions.append(start + move)
-                
+
             move = (x+1, y+1)
             move = to_notation(move)
             if y !=8 and x != 8:
@@ -313,7 +312,7 @@ class ChessBoard:
                 pieces = self.get_boardpiece((x-1,y+1))
                 if pieces != None :
                     if pieces.side != pieceself.side:
-                        possible_actions.append(start + move)    
+                        possible_actions.append(start + move)
         return possible_actions
 
     # This function should return, given the move specified (in the format
@@ -370,8 +369,24 @@ class ChessComputer:
     # material left on the board. Returns a score number, in which positive
     # means white is better off, while negative means black is better of
     @staticmethod
-    def evaluate_board(chessboard, depth_left):
-        return 0
+    def evaluate_board(ChessBoard, depth_left):
+        boardValue = 0
+        for x in range(8):
+            for y in range(8):
+                piece = ChessBoard.get_boardpiece((x,y))
+                if piece != None and piece.side == 0 and piece.material == Material.King:
+                    boardValue = boardValue + 10
+                if piece != None and piece.side == 1 and piece.material == Material.King:
+                    boardValue = boardValue - 10
+                if piece != None and piece.side == 0 and piece.material == Material.Rook:
+                    boardValue = boardValue + 5
+                if piece != None and piece.side == 1 and piece.material == Material.Rook:
+                    boardValue = boardValue - 5
+                if piece != None and piece.side == 0 and piece.material == Material.Pawn:
+                    boardValue = boardValue + 1
+                if piece != None and piece.side == 1 and piece.material == Material.Pawn:
+                    boardValue = boardValue - 1
+        return boardValue
 
 # This class is responsible for starting the chess game, playing and user
 # feedback
