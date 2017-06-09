@@ -353,7 +353,7 @@ class ChessComputer:
     @staticmethod
     def minimax(chessboard, depth):
         if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-            return ChessComputer.evaluate_board(chessboard, depth), None
+            return ChessComputer.evaluate_board(chessboard, depth), bestmove
 
         if chessboard.turn == Side.White:
             depth= depth -1 
@@ -367,8 +367,8 @@ class ChessComputer:
                 bestValue = max(bestValue, v)
             return bestValue
 
-        else: 
-            depth= depth -1   
+        else:
+            depth= depth -1
             bestValue = float ("inf")
             moves = chessboard.legal_moves()
             for move in moves:

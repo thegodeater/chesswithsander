@@ -194,10 +194,11 @@ class ChessBoard:
     def queen_Check(self,x,y,possible_actions):
         start = (x,y)
         start = to_notation(start)
+        pieceself = self.get_boardpiece((x,y))
         #left
         for t in range(8-x):
             end = (x+t, y+t)
-            if start != end and x+t !=8 y+t !=8 :
+            if start != end and x+t !=8 and y+t !=8 :
                 piece = self.get_boardpiece((x+t, y+t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -211,7 +212,7 @@ class ChessBoard:
         for t in range(x+1):
                 if t < 8 :
                     end = (x-t, y+t)
-                    if start != end and x-t != -1 y+t !=8:
+                    if start != end and x-t != -1 and y+t !=8:
                         piece = self.get_boardpiece((x-t, y+t))
                         if piece != None:
                             if piece.side == pieceself.side:
@@ -225,7 +226,7 @@ class ChessBoard:
         #right
         for t in range(8-y):
             end = (x+t, y-t)
-            if start != end and x+t !=8 y-t != -1:
+            if start != end and x+t !=8 and y-t != -1:
                 piece = self.get_boardpiece((x+t, y-t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -239,7 +240,7 @@ class ChessBoard:
         for t in range(y+1):
                 if t < 8 and t > 0:
                     end = (x-t, y-t)
-                    if start != end and x-t !=-1 y-t != -1::
+                    if start != end and x-t !=-1 and y-t != -1:
                         piece = self.get_boardpiece((x, y-t))
                         if piece != None :
                             if piece.side == pieceself.side:
@@ -314,7 +315,7 @@ class ChessBoard:
         #left
         for t in range(8-x):
             end = (x+t, y+t)
-            if start != end and x+t !=8 y+t !=8 :
+            if start != end and x+t !=8 and y+t !=8 :
                 piece = self.get_boardpiece((x+t, y+t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -328,7 +329,7 @@ class ChessBoard:
         for t in range(x+1):
                 if t < 8 :
                     end = (x-t, y+t)
-                    if start != end and x-t != -1 y+t !=8:
+                    if start != end and x-t != -1 and y+t !=8:
                         piece = self.get_boardpiece((x-t, y+t))
                         if piece != None:
                             if piece.side == pieceself.side:
@@ -342,7 +343,7 @@ class ChessBoard:
         #right
         for t in range(8-y):
             end = (x+t, y-t)
-            if start != end and x+t !=8 y-t != -1:
+            if start != end and x+t !=8 and y-t != -1:
                 piece = self.get_boardpiece((x+t, y-t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -356,7 +357,7 @@ class ChessBoard:
         for t in range(y+1):
                 if t < 8 and t > 0:
                     end = (x-t, y-t)
-                    if start != end and x-t !=-1 y-t != -1::
+                    if start != end and x-t !=-1 and y-t != -1:
                         piece = self.get_boardpiece((x, y-t))
                         if piece != None :
                             if piece.side == pieceself.side:
@@ -533,57 +534,45 @@ class ChessComputer:
     # of a specific board configuration after the max depth is reached
     # TODO: write an implementation for this function
     @staticmethod
-     def minimax(chessboard, depth):
+    def minimax(chessboard, depth):
+        bestmove = None
+        print(chessboard.turn)
+        if chessboard.turn == Side.White:
+            return ChessComputer.maxvalue(chessboard, depth, bestmove)
+        elif chessboard.turn == Side.Black:
+            return ChessComputer.minvalue(chessboard, depth, bestmove)
+    @staticmethod
+    def minvalue(chessboard, depth, bestmove):
+        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+            return ChessComputer.evaluate_board(chessboard, depth), bestmove
+        inf = 99999999
+        bestValue = float(inf)
+        moves = chessboard.legal_moves()
+        depth = depth - 1
+        for move in moves:
+            new_state = chessboard.make_move(move)
+            score,_ = ChessComputer.maxvalue(new_state, depth, bestmove)
+            if score < bestValue:
+                bestValue = score
+                bestmove = move
+        return(bestValue,bestmove)
 
-            def minvalue(chessboard, depth):
-                if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-                    return ChessComputer.evaluate_board(chessboard, depth), None
-                bestValue = float("inf")
-                moves = chessboard.legal_moves()
-                depth=depth-1   
-                #print(chessboard.turn)
-                for move in moves:
-                    new_state = chessboard.make_move(move)
-                    #print(new_state)
-                    score,_ = maxvalue(new_state, depth)
-                    print(score)
-                    #print(bestValue)
-                    
-                    if score < bestValue: 
-                        bestValue = score
-                        bestmove = move
-                return(bestValue,bestmove)
-            def maxvalue(chessboard, depth):
-                if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-                    
-                    return ChessComputer.evaluate_board(chessboard, depth), None
-                bestValue = -float("inf")
-                moves = chessboard.legal_moves()   
-                #print(chessboard.turn)
-                for move in moves:
-                    new_state = chessboard.make_move(move)
-                    #print(new_state)
-                    score,_ = minvalue(new_state, depth-1)
-                    #print(score)
-                    #print(bestValue)
-                    
-                    if score > bestValue: #
-                        bestValue = score
-                        bestmove = move
-                return(bestValue,bestmove)
+    @staticmethod
+    def maxvalue(chessboard, depth, bestmove):
+        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+            return ChessComputer.evaluate_board(chessboard, depth), bestmove
+        inf = 99999999
+        bestValue = -float(inf)
+        depth = depth - 1
+        moves = chessboard.legal_moves()
+        for move in moves:
+            new_state = chessboard.make_move(move)
+            score,_ = ChessComputer.minvalue(new_state, depth, bestmove)
 
-            if chessboard.turn == Side.White:
-                return maxvalue(chessboard, depth)
-            elif chessboard.turn == Side.Black:
-                return minvalue(chessboard, depth)
-
-#    def maxValue(chessboard):
-#        bestValue = inf
-#        return bestValue
-
-#    def minValue(chessboard):
-#        bestValue = -inf
-#        return bestValue
+            if score > bestValue:
+                bestValue = score
+                bestmove = move
+        return(bestValue,bestmove)
 
     # This function uses alphabeta to calculate the next move. Given the
     # chessboard and max depth, this function should return a tuple of the
@@ -601,6 +590,9 @@ class ChessComputer:
     @staticmethod
     def evaluate_board(ChessBoard, depth_left):
         boardValue = 0
+        boardValue = boardValue - depth_left * 2
+        if ChessBoard.turn == Side.Black:
+            boardValue = -boardValue
         for x in range(8):
             for y in range(8):
                 piece = ChessBoard.get_boardpiece((x,y))
@@ -646,7 +638,7 @@ class ChessComputer:
                     movespawn = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movespawn, ChessBoard)
                     boardValue = boardValue - 1 - 0.1 * movespawn - bonus
-                 if piece != None and piece.side == 1 and piece.material == Material.Queen:
+                if piece != None and piece.side == 1 and piece.material == Material.Queen:
                     possible_actions = []
                     bonus = 0
                     moves = ChessBoard.queen_Check(x,y,possible_actions)
@@ -694,8 +686,6 @@ class ChessComputer:
                 bonus = bonus + 16
             if possibleEnemy != None and possibleEnemy.material == Material.Bishop:
                 bonus = bonus + 5
-        print(bonus)
-        print("functie")
         return bonus
 
 
@@ -706,7 +696,7 @@ class ChessGame:
 
         # NOTE: you can make this depth higher once you have implemented
         # alpha-beta, which is more efficient
-        self.depth = 2
+        self.depth = 4
         self.chessboard = ChessBoard(turn)
 
         # If a file was specified as commandline argument, use that filename
