@@ -352,48 +352,32 @@ class ChessComputer:
     # TODO: write an implementation for this function
     @staticmethod
     def minimax(chessboard, depth):
-
-        def minvalue(chessboard, depth):
-            if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-                return ChessComputer.evaluate_board(chessboard, depth), None
-            bestValue = float("inf")
-            moves = chessboard.legal_moves()
-            depth=depth-1   
-            #print(chessboard.turn)
-            for move in moves:
-                new_state = chessboard.make_move(move)
-                #print(new_state)
-                score,_ = maxvalue(new_state, depth)
-               # print(score)
-                #print(bestValue)
-                
-                if score < bestValue: 
-                    bestValue = score
-                    bestmove = move
-            return(bestValue,bestmove)
-        def maxvalue(chessboard, depth):
-            if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
-                
-                return ChessComputer.evaluate_board(chessboard, depth), None
-            bestValue = -float("inf")
-            moves = chessboard.legal_moves()   
-            #print(chessboard.turn)
-            for move in moves:
-                new_state = chessboard.make_move(move)
-                #print(new_state)
-                score,_ = minvalue(new_state, depth-1)
-                #print(score)
-                #print(bestValue)
-                
-                if score > bestValue: #
-                    bestValue = score
-                    bestmove = move
-            return(bestValue,bestmove)
+        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+            return ChessComputer.evaluate_board(chessboard, depth), None
 
         if chessboard.turn == Side.White:
-            return maxvalue(chessboard, depth)
-        elif chessboard.turn == Side.Black:
-            return minvalue(chessboard, depth)
+            depth= depth -1 
+            bestValue = float("inf")
+            moves = chessboard.legal_moves()
+            for move in moves:
+                new_state = chessboard.make_move(move)
+                v = ChessComputer.minimax(new_state,depth)
+                print(bestValue)
+                print(v)
+                bestValue = max(bestValue, v)
+            return bestValue
+
+        else: 
+            depth= depth -1   
+            bestValue = float ("inf")
+            moves = chessboard.legal_moves()
+            for move in moves:
+                new_state = chessboard.make_move(move)
+                v = ChessComputer.minimax(new_state,depth)
+                print(bestValue)
+                print(v)
+                bestValue = min(bestValue, v)
+        return bestValue
 
     @staticmethod
     def alphabeta(chessboard, depth, alpha, beta):
@@ -429,7 +413,7 @@ class ChessComputer:
                    # possible_actions = []
                    # movespawn = len(ChessBoard.pion_Check(x,y,possible_actions))
                     boardValue = boardValue - 0.5#- movespawn/2
-        return boardValue*(1.1**depth_left)
+        return boardValue+(1.1**depth_left)
 
 # This class is responsible for starting the chess game, playing and user
 # feedback
@@ -438,7 +422,7 @@ class ChessGame:
 
         # NOTE: you can make this depth higher once you have implemented
         # alpha-beta, which is more efficient
-        self.depth = 2
+        self.depth = 3
         self.chessboard = ChessBoard(turn)
 
         # If a file was specified as commandline argument, use that filename

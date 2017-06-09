@@ -34,7 +34,7 @@ def to_move(from_coord, to_coord):
 # - Side.White
 # - Side.Black
 class Material:
-    Rook, King, Pawn = ['r','k','p']
+    Rook, King, Pawn,Queen,Bishop = ['r','k','p','q','b']
 class Side:
     White, Black = range(0,2)
 
@@ -182,10 +182,192 @@ class ChessBoard:
                         self.toren_Check(x,y,possible_actions)
                 if piece != None and piece.side==self.turn and   piece.material == Material.Pawn:
                         self.pion_Check(x,y,possible_actions)
+                if piece != None and piece.side==self.turn and   piece.material == Material.Bishop:
+                        self.bishop_Check(x,y,possible_actions)
+                if piece != None and piece.side==self.turn and   piece.material == Material.Queen:
+                        self.queen_Check(x,y,possible_actions)
+
         return possible_actions
 
 
     pass
+    def queen_Check(self,x,y,possible_actions):
+        start = (x,y)
+        start = to_notation(start)
+        #left
+        for t in range(8-x):
+            end = (x+t, y+t)
+            if start != end and x+t !=8 y+t !=8 :
+                piece = self.get_boardpiece((x+t, y+t))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(x+1):
+                if t < 8 :
+                    end = (x-t, y+t)
+                    if start != end and x-t != -1 y+t !=8:
+                        piece = self.get_boardpiece((x-t, y+t))
+                        if piece != None:
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+
+        #right
+        for t in range(8-y):
+            end = (x+t, y-t)
+            if start != end and x+t !=8 y-t != -1:
+                piece = self.get_boardpiece((x+t, y-t))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(y+1):
+                if t < 8 and t > 0:
+                    end = (x-t, y-t)
+                    if start != end and x-t !=-1 y-t != -1::
+                        piece = self.get_boardpiece((x, y-t))
+                        if piece != None :
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+        #Horizontal Moves
+        for t in range(8-x):
+            end = (x+t, y)
+            if start != end:
+                piece = self.get_boardpiece((x+t, y))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(x+1):
+                if t < 8 :
+                    end = (x-t, y)
+                    if start != end:
+                        piece = self.get_boardpiece((x-t, y))
+                        if piece != None:
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+
+        #Vertical Moves
+        for t in range(8-y):
+            end = (x, y+t)
+            if start != end:
+                piece = self.get_boardpiece((x, y+t))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(y+1):
+                if t < 8 and t > 0:
+                    end = (x, y-t)
+                    piece = self.get_boardpiece((x, y-t))
+                    if start != end:
+                        if piece != None :
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+
+        return possible_actions
+
+
+    def bishop_Check(self,x,y,possible_actions):
+        start = (x,y)
+        start = to_notation(start)
+        #left
+        for t in range(8-x):
+            end = (x+t, y+t)
+            if start != end and x+t !=8 y+t !=8 :
+                piece = self.get_boardpiece((x+t, y+t))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(x+1):
+                if t < 8 :
+                    end = (x-t, y+t)
+                    if start != end and x-t != -1 y+t !=8:
+                        piece = self.get_boardpiece((x-t, y+t))
+                        if piece != None:
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+
+        #right
+        for t in range(8-y):
+            end = (x+t, y-t)
+            if start != end and x+t !=8 y-t != -1:
+                piece = self.get_boardpiece((x+t, y-t))
+                if piece != None :
+                    if piece.side == pieceself.side:
+                        break
+                    if piece.side != pieceself.side:
+                        possible_actions.append(to_move(start,end))
+                        break
+                else:
+                    possible_actions.append(to_move(start,end))
+
+        for t in range(y+1):
+                if t < 8 and t > 0:
+                    end = (x-t, y-t)
+                    if start != end and x-t !=-1 y-t != -1::
+                        piece = self.get_boardpiece((x, y-t))
+                        if piece != None :
+                            if piece.side == pieceself.side:
+                                break
+                            if piece.side != pieceself.side:
+                                possible_actions.append(to_move(start,end))
+                                break
+                        else:
+                            possible_actions.append(to_move(start,end))
+
+        return possible_actions
 
     def koning_Check(self,x,y,possible_actions):
         start = (x,y)
@@ -364,7 +546,7 @@ class ChessComputer:
                     new_state = chessboard.make_move(move)
                     #print(new_state)
                     score,_ = maxvalue(new_state, depth)
-                   # print(score)
+                    print(score)
                     #print(bestValue)
                     
                     if score < bestValue: 
@@ -464,6 +646,34 @@ class ChessComputer:
                     movespawn = len(moves)
                     bonus = ChessComputer.checkBonus(moves, movespawn, ChessBoard)
                     boardValue = boardValue - 1 - 0.1 * movespawn - bonus
+                 if piece != None and piece.side == 1 and piece.material == Material.Queen:
+                    possible_actions = []
+                    bonus = 0
+                    moves = ChessBoard.queen_Check(x,y,possible_actions)
+                    movesrook = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
+                    boardValue = boardValue - 9 - 0.1 * movesrook - bonus
+                if piece != None and piece.side == 0 and piece.material == Material.Queen:
+                    possible_actions = []
+                    bonus = 0
+                    moves = ChessBoard.queen_Check(x,y,possible_actions)
+                    movesrook = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
+                    boardValue = boardValue + 9 + 0.1 * movesrook + bonus
+                if piece != None and piece.side == 1 and piece.material == Material.Bishop:
+                    possible_actions = []
+                    bonus = 0
+                    moves = ChessBoard.bishop_Check(x,y,possible_actions)
+                    movesrook = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
+                    boardValue = boardValue - 9 - 0.1 * movesrook - bonus
+                if piece != None and piece.side == 0 and piece.material == Material.Bishop:
+                    possible_actions = []
+                    bonus = 0
+                    moves = ChessBoard.bishop_Check(x,y,possible_actions)
+                    movesrook = len(moves)
+                    bonus = ChessComputer.checkBonus(moves, movesrook, ChessBoard)
+                    boardValue = boardValue + 3 + 0.1 * movesrook + bonus
         return boardValue
 
     def checkBonus(alle_Moves, aantal, ChessBoard):
@@ -480,6 +690,10 @@ class ChessComputer:
                 bonus = bonus + 8
             if possibleEnemy != None and possibleEnemy.material == Material.Pawn:
                 bonus = bonus + 2
+            if possibleEnemy != None and possibleEnemy.material == Material.Queen:
+                bonus = bonus + 16
+            if possibleEnemy != None and possibleEnemy.material == Material.Bishop:
+                bonus = bonus + 5
         print(bonus)
         print("functie")
         return bonus
