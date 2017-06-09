@@ -186,19 +186,17 @@ class ChessBoard:
                         self.bishop_Check(x,y,possible_actions)
                 if piece != None and piece.side==self.turn and   piece.material == Material.Queen:
                         self.queen_Check(x,y,possible_actions)
-
         return possible_actions
 
 
     pass
     def queen_Check(self,x,y,possible_actions):
         start = (x,y)
-        start = to_notation(start)
         pieceself = self.get_boardpiece((x,y))
-        #left
+        #UpRight
         for t in range(8-x):
             end = (x+t, y+t)
-            if start != end and x+t !=8 and y+t !=8 :
+            if start != end and x+t < 8 and y+t < 8 :
                 piece = self.get_boardpiece((x+t, y+t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -208,25 +206,25 @@ class ChessBoard:
                         break
                 else:
                     possible_actions.append(to_move(start,end))
-
+        #UpLeft
         for t in range(x+1):
-                if t < 8 :
-                    end = (x-t, y+t)
-                    if start != end and x-t != -1 and y+t !=8:
-                        piece = self.get_boardpiece((x-t, y+t))
-                        if piece != None:
-                            if piece.side == pieceself.side:
-                                break
-                            if piece.side != pieceself.side:
-                                possible_actions.append(to_move(start,end))
-                                break
-                        else:
+            if t < 8 :
+                end = (x-t, y+t)
+                if start != end and x-t > -1 and y+t < 8:
+                    piece = self.get_boardpiece((x-t, y+t))
+                    if piece != None:
+                        if piece.side == pieceself.side:
+                            break
+                        if piece.side != pieceself.side:
                             possible_actions.append(to_move(start,end))
+                            break
+                    else:
+                        possible_actions.append(to_move(start,end))
 
-        #right
+        #UpRight
         for t in range(8-y):
             end = (x+t, y-t)
-            if start != end and x+t !=8 and y-t != -1:
+            if start != end and x+t < 8 and y-t > -1:
                 piece = self.get_boardpiece((x+t, y-t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -236,20 +234,20 @@ class ChessBoard:
                         break
                 else:
                     possible_actions.append(to_move(start,end))
-
+        #LeftRight
         for t in range(y+1):
-                if t < 8 and t > 0:
-                    end = (x-t, y-t)
-                    if start != end and x-t !=-1 and y-t != -1:
-                        piece = self.get_boardpiece((x, y-t))
-                        if piece != None :
-                            if piece.side == pieceself.side:
-                                break
-                            if piece.side != pieceself.side:
-                                possible_actions.append(to_move(start,end))
-                                break
-                        else:
+            if t < 8 and t > 0:
+                end = (x-t, y-t)
+                if start != end and x-t > -1 and y-t > -1:
+                    piece = self.get_boardpiece((x-t, y-t))
+                    if piece != None :
+                        if piece.side == pieceself.side:
+                            break
+                        if piece.side != pieceself.side:
                             possible_actions.append(to_move(start,end))
+                            break
+                    else:
+                        possible_actions.append(to_move(start,end))
         #Horizontal Moves
         for t in range(8-x):
             end = (x+t, y)
@@ -305,17 +303,17 @@ class ChessBoard:
                                 break
                         else:
                             possible_actions.append(to_move(start,end))
-
         return possible_actions
+
 
 
     def bishop_Check(self,x,y,possible_actions):
         start = (x,y)
-        start = to_notation(start)
-        #left
+        pieceself = self.get_boardpiece((x,y))
+        #UpRight
         for t in range(8-x):
             end = (x+t, y+t)
-            if start != end and x+t !=8 and y+t !=8 :
+            if start != end and x+t < 8 and y+t < 8 :
                 piece = self.get_boardpiece((x+t, y+t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -325,25 +323,25 @@ class ChessBoard:
                         break
                 else:
                     possible_actions.append(to_move(start,end))
-
+        #UpLeft
         for t in range(x+1):
-                if t < 8 :
-                    end = (x-t, y+t)
-                    if start != end and x-t != -1 and y+t !=8:
-                        piece = self.get_boardpiece((x-t, y+t))
-                        if piece != None:
-                            if piece.side == pieceself.side:
-                                break
-                            if piece.side != pieceself.side:
-                                possible_actions.append(to_move(start,end))
-                                break
-                        else:
+            if t < 8 :
+                end = (x-t, y+t)
+                if start != end and x-t > -1 and y+t < 8:
+                    piece = self.get_boardpiece((x-t, y+t))
+                    if piece != None:
+                        if piece.side == pieceself.side:
+                            break
+                        if piece.side != pieceself.side:
                             possible_actions.append(to_move(start,end))
+                            break
+                    else:
+                        possible_actions.append(to_move(start,end))
 
-        #right
+        #UpRight
         for t in range(8-y):
             end = (x+t, y-t)
-            if start != end and x+t !=8 and y-t != -1:
+            if start != end and x+t < 8 and y-t > -1:
                 piece = self.get_boardpiece((x+t, y-t))
                 if piece != None :
                     if piece.side == pieceself.side:
@@ -353,21 +351,20 @@ class ChessBoard:
                         break
                 else:
                     possible_actions.append(to_move(start,end))
-
+        #LeftRight
         for t in range(y+1):
-                if t < 8 and t > 0:
-                    end = (x-t, y-t)
-                    if start != end and x-t !=-1 and y-t != -1:
-                        piece = self.get_boardpiece((x, y-t))
-                        if piece != None :
-                            if piece.side == pieceself.side:
-                                break
-                            if piece.side != pieceself.side:
-                                possible_actions.append(to_move(start,end))
-                                break
-                        else:
+            if t < 8 and t > 0:
+                end = (x-t, y-t)
+                if start != end and x-t > -1 and y-t > -1:
+                    piece = self.get_boardpiece((x-t, y-t))
+                    if piece != None :
+                        if piece.side == pieceself.side:
+                            break
+                        if piece.side != pieceself.side:
                             possible_actions.append(to_move(start,end))
-
+                            break
+                    else:
+                        possible_actions.append(to_move(start,end))
         return possible_actions
 
     def koning_Check(self,x,y,possible_actions):
@@ -455,20 +452,20 @@ class ChessBoard:
         if pieceself.side == Side.White:
             move = (x, y-1)
             move = to_notation(move)
-            if y !=-1:
+            if y-1 !=-1:
                 pieces = self.get_boardpiece((x,y-1))
                 if pieces == None :
                     possible_actions.append(start + move)
             move = (x+1, y-1)
             move = to_notation(move)
-            if y !=-1 and x != 8:
+            if y-1 != -1 and x+1 != 8:
                 pieces = self.get_boardpiece((x+1,y-1))
                 if pieces != None :
                     if pieces.side != pieceself.side:
                         possible_actions.append(start + move)
             move = (x-1, y-1)
             move = to_notation(move)
-            if y !=-1 and x != -1:
+            if y-1 !=-1 and x-1 != -1:
                 pieces = self.get_boardpiece((x-1,y-1))
                 if pieces != None :
                     if pieces.side != pieceself.side:
@@ -477,21 +474,21 @@ class ChessBoard:
         if pieceself.side == Side.Black:
             move = (x, y+1)
             move = to_notation(move)
-            if y !=-1:
+            if y+1 != 8:
                 pieces = self.get_boardpiece((x,y+1))
                 if pieces == None :
                     possible_actions.append(start + move)
 
             move = (x+1, y+1)
             move = to_notation(move)
-            if y !=8 and x != 8:
+            if y+1 !=8 and x+1 != 8:
                 pieces = self.get_boardpiece((x+1,y+1))
                 if pieces != None :
                     if pieces.side != pieceself.side:
                         possible_actions.append(start + move)
             move = (x-1, y+1)
             move = to_notation(move)
-            if y !=8 and x != -1:
+            if y+1 !=8 and x-1 != -1:
                 pieces = self.get_boardpiece((x-1,y+1))
                 if pieces != None :
                     if pieces.side != pieceself.side:
@@ -536,7 +533,6 @@ class ChessComputer:
     @staticmethod
     def minimax(chessboard, depth):
         bestmove = None
-        print(chessboard.turn)
         if chessboard.turn == Side.White:
             return ChessComputer.maxvalue(chessboard, depth, bestmove)
         elif chessboard.turn == Side.Black:
@@ -582,7 +578,43 @@ class ChessComputer:
     # of a specific board configuration after the max depth is reached
     @staticmethod
     def alphabeta(chessboard, depth, alpha, beta):
-        return (0, "no implementation written")
+        bestmove = None
+        if chessboard.turn == Side.White:
+            return ChessComputer.maxalpha(chessboard, depth, bestmove, alpha, beta)
+        elif chessboard.turn == Side.Black:
+            return ChessComputer.minalpha(chessboard, depth, bestmove, alpha, beta)
+    @staticmethod
+    def minalpha(chessboard, depth, bestmove, alpha, beta):
+        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+            return ChessComputer.evaluate_board(chessboard, depth), bestmove
+        inf = 99999999
+        bestValue = float(inf)
+        moves = chessboard.legal_moves()
+        depth = depth - 1
+        for move in moves:
+            new_state = chessboard.make_move(move)
+            score,_ = ChessComputer.maxalpha(new_state, depth, bestmove, alpha, beta)
+            if score < bestValue:
+                bestValue = score
+                bestmove = move
+        return(bestValue,bestmove)
+
+    @staticmethod
+    def maxalpha(chessboard, depth, bestmove, alpha, beta):
+        if depth == 0 or chessboard.is_king_dead(Side.White) or chessboard.is_king_dead(Side.Black):
+            return ChessComputer.evaluate_board(chessboard, depth), bestmove
+        inf = 99999999
+        bestValue = -float(inf)
+        depth = depth - 1
+        moves = chessboard.legal_moves()
+        for move in moves:
+            new_state = chessboard.make_move(move)
+            score,_ = ChessComputer.minalpha(new_state, depth, bestmove, alpha, beta)
+
+            if score > bestValue:
+                bestValue = score
+                bestmove = move
+        return(bestValue,bestmove)
 
     # Calculates the score of a given board configuration based on the
     # material left on the board. Returns a score number, in which positive
@@ -696,7 +728,7 @@ class ChessGame:
 
         # NOTE: you can make this depth higher once you have implemented
         # alpha-beta, which is more efficient
-        self.depth = 4
+        self.depth = 2
         self.chessboard = ChessBoard(turn)
 
         # If a file was specified as commandline argument, use that filename
@@ -734,7 +766,7 @@ class ChessGame:
     def make_computer_move(self):
         print("Calculating best move...")
         return ChessComputer.computer_move(self.chessboard,
-                self.depth, alphabeta=False)
+                self.depth, alphabeta= True)
 
 
     def make_human_move(self):
