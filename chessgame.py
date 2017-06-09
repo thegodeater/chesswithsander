@@ -45,7 +45,6 @@ class Piece:
         self.side = side
         self.material = material
 
-
 # A chess configuration is specified by whose turn it is and a 2d array
 # with all the pieces on the board
 class ChessBoard:
@@ -54,7 +53,6 @@ class ChessBoard:
         # This variable is either equal to Side.White or Side.Black
         self.turn = turn
         self.board_matrix = None
-
 
     ## Getter and setter methods
     def set_board_matrix(self,board_matrix):
@@ -97,7 +95,6 @@ class ChessBoard:
             else:
                 side = Side.Black
             material = char.lower()
-
             piece = Piece(side, material)
             self.set_boardpiece((x,y),piece)
             x += 1
@@ -105,7 +102,6 @@ class ChessBoard:
     # Print the current board state
     def __str__(self):
         return_str = ""
-
         return_str += "   abcdefgh\n\n"
         y = 8
         for board_row in self.board_matrix:
@@ -120,17 +116,14 @@ class ChessBoard:
                     return_str += char
             return_str += '\n'
             y -= 1
-
         turn_name = ("White" if self.turn == Side.White else "Black")
         return_str += "It is " + turn_name + "'s turn\n"
-
         return return_str
 
     # Given a move string in chess notation, return a new ChessBoard object
     # with the new board situation
     # Note: this method assumes the move suggested is a valid, legal move
     def make_move(self, move_str):
-
         start_pos = to_coordinate(move_str[0:2])
         end_pos = to_coordinate(move_str[2:4])
 
@@ -150,7 +143,6 @@ class ChessBoard:
         piece = new_board.get_boardpiece(start_pos)
         new_board.set_boardpiece(end_pos, piece)
         new_board.set_boardpiece(start_pos, None)
-
         return new_board
 
     def is_king_dead(self, side):
@@ -163,15 +155,14 @@ class ChessBoard:
                     seen_king = True
         return not seen_king
 
-
-
     # This function should return, given the current board configuation and
     # which players turn it is, all the moves possible for that playerssssssssss
     # It should return these moves as a list of move strings, e.g.
     # [c2c3, d4e5, f4f8]
     # TODO: write an implementation for this function
     def legal_moves(self):
-        # we moeten toevoegen dat hij kijkt wiens zet het is
+        #Check het gehele bord op stukken, als er een stuk staat kijk welk stuk
+        #Check dan welke stukken welke moves kunnen maken
         possible_actions = []
         for x in range(8):
             for y in range(8):
@@ -187,9 +178,9 @@ class ChessBoard:
                 if piece != None and piece.side==self.turn and   piece.material == Material.Queen:
                         self.queen_Check(x,y,possible_actions)
         return possible_actions
-
-
     pass
+
+    #Combinatie van toren_Check en de bishop_Check, niet de meest efficiente code maar het werkt
     def queen_Check(self,x,y,possible_actions):
         start = (x,y)
         pieceself = self.get_boardpiece((x,y))
@@ -234,6 +225,7 @@ class ChessBoard:
                         break
                 else:
                     possible_actions.append(to_move(start,end))
+
         #LeftRight
         for t in range(y+1):
             if t < 8 and t > 0:
@@ -248,7 +240,8 @@ class ChessBoard:
                             break
                     else:
                         possible_actions.append(to_move(start,end))
-        #Horizontal Moves
+
+        #Horizontal Right
         for t in range(8-x):
             end = (x+t, y)
             if start != end:
@@ -262,6 +255,7 @@ class ChessBoard:
                 else:
                     possible_actions.append(to_move(start,end))
 
+        #Horizontal left
         for t in range(x+1):
                 if t < 8 :
                     end = (x-t, y)
@@ -276,7 +270,7 @@ class ChessBoard:
                         else:
                             possible_actions.append(to_move(start,end))
 
-        #Vertical Moves
+        #Vertical Up
         for t in range(8-y):
             end = (x, y+t)
             if start != end:
@@ -290,6 +284,7 @@ class ChessBoard:
                 else:
                     possible_actions.append(to_move(start,end))
 
+        #Vertical Down
         for t in range(y+1):
                 if t < 8 and t > 0:
                     end = (x, y-t)
@@ -305,8 +300,7 @@ class ChessBoard:
                             possible_actions.append(to_move(start,end))
         return possible_actions
 
-
-
+    #Geeft de moves van de Bishop
     def bishop_Check(self,x,y,possible_actions):
         start = (x,y)
         pieceself = self.get_boardpiece((x,y))
@@ -367,6 +361,7 @@ class ChessBoard:
                         possible_actions.append(to_move(start,end))
         return possible_actions
 
+    #Geeft de moves van de Koning
     def koning_Check(self,x,y,possible_actions):
         start = (x,y)
         start = to_notation(start)
@@ -383,11 +378,11 @@ class ChessBoard:
                         possible_actions.append(start + move)
         return possible_actions
 
-
+    #Geeft de moves van de Toren
     def toren_Check(self,x,y,possible_actions):
         start = (x,y)
         pieceself = self.get_boardpiece((x,y))
-        #Horizontal Moves
+        #Horizontal Right
         for t in range(8-x):
             end = (x+t, y)
             if start != end:
@@ -400,7 +395,7 @@ class ChessBoard:
                         break
                 else:
                     possible_actions.append(to_move(start,end))
-
+        #Horizontal left
         for t in range(x+1):
                 if t < 8 :
                     end = (x-t, y)
@@ -415,7 +410,7 @@ class ChessBoard:
                         else:
                             possible_actions.append(to_move(start,end))
 
-        #Vertical Moves
+        #Vertical Up
         for t in range(8-y):
             end = (x, y+t)
             if start != end:
@@ -429,6 +424,7 @@ class ChessBoard:
                 else:
                     possible_actions.append(to_move(start,end))
 
+        #Vertical Down
         for t in range(y+1):
                 if t < 8 and t > 0:
                     end = (x, y-t)
@@ -445,10 +441,13 @@ class ChessBoard:
 
         return possible_actions
 
+    #Geeft de moves van de Pawn
     def pion_Check(self,x,y,possible_actions):
         start = (x,y)
         start = to_notation(start)
         pieceself = self.get_boardpiece((x,y))
+
+        #Wit kan alleen naar boven
         if pieceself.side == Side.White:
             move = (x, y-1)
             move = to_notation(move)
@@ -471,6 +470,7 @@ class ChessBoard:
                     if pieces.side != pieceself.side:
                         possible_actions.append(start + move)
 
+        #Black kan alleen naar beneden
         if pieceself.side == Side.Black:
             move = (x, y+1)
             move = to_notation(move)
@@ -531,6 +531,8 @@ class ChessComputer:
     # of a specific board configuration after the max depth is reached
     # TODO: write an implementation for this function
     @staticmethod
+    #Ergens in de minimax doet hij bepaalde moves meerdere keren, waardoor hij er iets langer over doet
+    #Dit probleem hebben we niet kunnen oplossen
     def minimax(chessboard, depth):
         bestmove = None
         if chessboard.turn == Side.White:
@@ -620,9 +622,16 @@ class ChessComputer:
     # material left on the board. Returns a score number, in which positive
     # means white is better off, while negative means black is better of
     @staticmethod
+    #Evaluate Board kijkt ten eerste naar welke stukken op het bord staan, elk van de stukken
+    #heeft een bepaalde waarde. Daarnaast kijkt hij bij elk van de stukken hoeveel mogelijke
+    #movements hij kan maken, aangezien een stuk met veel mogelijke moves belangrijker is.
+    #Dan kijkt hij met de checkBonus function of dat stuk een tegenstander kan slaan, zo ja
+    #dan krijgt hij een bonus (koning kunnen slaan is meer punten dan pion kunnen slaan).
+    #Met de depth_left krijgt het bord een lagere waarde.
+    #Niet super efficient, maar het werkt.
     def evaluate_board(ChessBoard, depth_left):
         boardValue = 0
-        boardValue = boardValue - depth_left * 2
+        boardValue = boardValue - 1.2 ** depth_left
         if ChessBoard.turn == Side.Black:
             boardValue = -boardValue
         for x in range(8):
@@ -700,6 +709,7 @@ class ChessComputer:
                     boardValue = boardValue + 3 + 0.1 * movesrook + bonus
         return boardValue
 
+    #Als een stuk iemand kan slaan komen er bonuspunten
     def checkBonus(alle_Moves, aantal, ChessBoard):
         bonus = 0
         for i in range(aantal):
@@ -720,15 +730,13 @@ class ChessComputer:
                 bonus = bonus + 5
         return bonus
 
-
 # This class is responsible for starting the chess game, playing and user
 # feedback
 class ChessGame:
     def __init__(self, turn):
-
         # NOTE: you can make this depth higher once you have implemented
         # alpha-beta, which is more efficient
-        self.depth = 2
+        self.depth = 4
         self.chessboard = ChessBoard(turn)
 
         # If a file was specified as commandline argument, use that filename
@@ -762,12 +770,10 @@ class ChessGame:
             print("")
             self.make_human_move()
 
-
     def make_computer_move(self):
         print("Calculating best move...")
         return ChessComputer.computer_move(self.chessboard,
-                self.depth, alphabeta= True)
-
+                self.depth, alphabeta=False)
 
     def make_human_move(self):
         # Endlessly request input until the right input is specified
